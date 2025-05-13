@@ -1,4 +1,4 @@
-# GitHub OWNERS File Analyzer
+# OWNERS 2 CODEOWNERS Endor
 
 The script will output a list of all OWNERS files found in the repository, along with the owners listed in each file, and then update an Endor Labs project with the data.
 
