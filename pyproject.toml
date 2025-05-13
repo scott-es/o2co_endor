@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "o2co-endor"
+version = "0.1.0"
+description = ""
+authors = ["scott-es <scott.esbrandt@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+requests = "^2.32.3"
+python-dotenv = "^1.1.0"
+pygithub = "^2.6.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
