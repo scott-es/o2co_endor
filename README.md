@@ -1,6 +1,6 @@
 # GitHub OWNERS File Analyzer
 
-This tool analyzes OWNERS files in a GitHub repository, helping you understand who owns different parts of the codebase.
+The script will output a list of all OWNERS files found in the repository, along with the owners listed in each file, and then update an Endor Labs project with the data.
 
 ## Prerequisites
 
@@ -40,10 +40,6 @@ For example:
 ```bash
 poetry run python o2co_endor/main.py kubernetes kubernetes project-uuid-123 endor-namespace
 ```
-
-## Output
-
-The script will output a list of all OWNERS files found in the repository, along with the owners listed in each file, and then update an Endor Labs project with the data.
 
 ## Features
 
