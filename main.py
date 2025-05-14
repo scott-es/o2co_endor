@@ -101,7 +101,7 @@ class OwnersAnalyzer:
                                 self.debug_print(f"Found jira-component: {match.group(1)}")
                 
                 if labels and owners:  # Only add paths that have valid parsed owners
-                    print(f"  -  Path '{clean_path}': {len(owners)} ownership entries found")
+                    print(f"-  Path '{clean_path}': {len(owners)} ownership entries found")
                     results[clean_path] = {
                         "labels": labels,
                         "owners": owners
@@ -192,15 +192,20 @@ def main():
 
         if not args.no_dry_run:
             print("\nDRY RUN MODE - Skipping HTTP POST request")
-            print(f"  -  Would have posted to: {url}")
-            analyzer.debug_print("Payload that would have been sent:")
-            analyzer.debug_print("-" * 50)
-            analyzer.debug_print(payload)
+            print(f"Would have posted to: {url}")
+            print("Payload that would have been sent:")
+            print("-" * 50)
+            print(payload)
         else:
-            print(f"\nPosting code owner data to: {url}")
+            print("\nSyncing to Endor Labs as CodeOwners... ", end="")
             response = requests.post(url, json=payload, headers=headers)
             analyzer.debug_print(f"Response body: {response.text}")
-            print(f"Response status: {response.status_code}")
+            analyzer.debug_print(f"Response status: {response.status_code}")
+            if response.status_code != 200:
+                print(f"Error: HTTP request failed with status code {response.status_code}")
+                sys.exit(1)
+            else:
+                print("Done")
 
     except GithubException as e:
         print(f"Unexpected error: {e}")
