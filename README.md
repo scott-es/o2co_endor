@@ -4,7 +4,8 @@ This script analyzes OWNERS files in a GitHub repository and syncs the ownership
 
 ## Features
 
-- Finds all OWNERS files in a GitHub repository
+- Automatically detects GitHub organization and repository from git remote
+- Finds all OWNERS files in the repository using git commands
 - Parses jira-project and jira-component entries
 - Supports both single and double quotes in OWNERS files
 - Syncs ownership data to Endor Labs API
@@ -15,7 +16,7 @@ This script analyzes OWNERS files in a GitHub repository and syncs the ownership
 
 - Python 3.6+
 - Poetry for dependency management
-- GitHub token with repo access
+- Git repository with remote origin configured
 - Endor Labs token
 
 ## Installation
@@ -29,28 +30,24 @@ poetry install
 
 ## Configuration
 
-Create a `.env` file in the project root with your tokens:
+Create a `.env` file in the project root with your Endor token:
 
 ```env
-GITHUB_TOKEN=your_github_token
 ENDOR_TOKEN=your_endor_token
 ```
 
-You can create a GitHub token at: <https://github.com/settings/tokens>
-
 ## Usage
+
+The script must be run from within a git repository. It will automatically detect the GitHub organization and repository from the git remote.
 
 Basic usage:
 
 ```bash
-poetry run python o2co_endor/main.py <organization> <repository> <endor-project-uuid> <endor-namespace>
+poetry run python o2co_endor/main.py <endor-namespace>
 ```
 
 ### Arguments
 
-- `organization`: GitHub organization name
-- `repository`: GitHub repository name
-- `endor-project-uuid`: Endor project UUID
 - `endor-namespace`: Endor namespace
 
 ### Flags
@@ -63,31 +60,32 @@ poetry run python o2co_endor/main.py <organization> <repository> <endor-project-
 1. Dry run with debug output:
 
 ```bash
-poetry run python o2co_endor/main.py myorg myrepo project-uuid namespace --debug
+poetry run python o2co_endor/main.py my-namespace --debug
 ```
 
 2. Actually sync to Endor Labs:
 
 ```bash
-poetry run python o2co_endor/main.py myorg myrepo project-uuid namespace --no-dry-run
+poetry run python o2co_endor/main.py my-namespace --no-dry-run
 ```
 
 3. Debug mode with actual sync:
 
 ```bash
-poetry run python o2co_endor/main.py myorg myrepo project-uuid namespace --debug --no-dry-run
+poetry run python o2co_endor/main.py my-namespace --debug --no-dry-run
 ```
 
 ## Output
 
 The script will:
-1. Find and parse all OWNERS files in the repository
-2. Display the number of OWNERS files found
-3. Show the ownership entries found for each path
-4. In dry run mode (default):
+1. Detect the GitHub organization and repository from git remote
+2. Find and parse all OWNERS files in the repository
+3. Display the number of OWNERS files found
+4. Show the ownership entries found for each path
+5. In dry run mode (default):
    - Show the URL that would be used
    - Display the payload that would be sent
-5. In non-dry-run mode:
+6. In non-dry-run mode:
    - Make the HTTP POST request to Endor Labs
    - Show the response status and body
    - Exit with code 1 if the request fails
@@ -95,8 +93,9 @@ The script will:
 ## Error Handling
 
 The script will exit with code 1 if:
+- Not run from within a git repository
+- Git remote origin is not configured
 - Required environment variables are missing
-- GitHub repository access fails
 - HTTP POST request returns a non-200 status code
 - Any unexpected errors occur
 
